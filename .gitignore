@@ -1,0 +1,28 @@
+# OS X
+**/.svn
+**/.hg
+**/CVS
+**/Thumbs.db
+**/.DS_Store
+
+# dependencies
+node_modules
+
+# production
+build
+
+# misc
+.env
+public/uploads/*
+
+src/storage/*
+!src/storage/cache
+src/storage/cache/*
+!src/storage/logs
+src/storage/logs/*
+
+!**/.gitkeep
+
+# IDE config
+.vscode
+.idea

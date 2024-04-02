@@ -1,0 +1,12 @@
+{
+    "ext": "js",
+    "verbose": true,
+    "watch": ["src/", ".env"],
+    "ignore": ["src/storage"],
+    "execMap": {
+        "js": "babel-node"
+    },
+    "env": {
+        "__ESLINT__": "true"
+    }
+}
