@@ -41,7 +41,6 @@ export const createAdmin = Joi.object({
                     return value;
                 }),
         ),
-    status: Joi.number().valid(1,2).required().label("Trạng thái"),
 });
 
 export const updateAdmin = Joi.object({
@@ -73,7 +72,6 @@ export const updateAdmin = Joi.object({
                     return !admin ? value : helpers.error("any.exists");
                 }),
         ),
-    status: Joi.number().valid(1, 2).required().label("Trạng thái"),
 });
 
 export const changeStatus = Joi.object({

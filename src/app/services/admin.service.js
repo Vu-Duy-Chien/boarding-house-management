@@ -3,28 +3,26 @@ import {Admin} from "../models";
 
 export async function updateProfile(admin, {name, phone}) {
     admin.name = name;
-    admin.phone = phone;
+    admin.phone = phone || null;
 
     return await admin.save();
 }
 
-export async function create({name, email, password, phone, status}) {
+export async function create({name, email, password, phone}) {
     const admin = new Admin({
         name,
         email,
         phone: phone || null,
-        password: generatePassword(password),
-        status
+        password: generatePassword(password)
     });
     await admin.save();
     return admin;
 }
 
-export async function updateAdmin(admin, {name, email, phone, status}) {
+export async function updateAdmin(admin, {name, email, phone}) {
     admin.name = name;
     admin.email = email;
     admin.phone = phone || null;
-    admin.status = status;
     await admin.save();
     return admin;
 }

@@ -1,6 +1,6 @@
 import {Router} from "express";
 
-import * as adminMiddleware from "@/app/middleware/admin/admin.middleware";
+import * as adminMiddleware from "@/app/middleware/admin.middleware";
 import * as adminRequest from "@/app/requests/admin/admin.request";
 import * as adminController from "@/app/controllers/admin/admin.controller";
 
@@ -27,14 +27,7 @@ router.put(
 );
 
 router.patch(
-    "/:adminId/change-status",
-    asyncHandler(adminMiddleware.checkAdminId),
-    asyncHandler(validate(adminRequest.changeStatus)),
-    asyncHandler(adminController.changeStatus),
-);
-
-router.patch(
-    "/:adminId/change-password",
+    "/:adminId",
     asyncHandler(adminMiddleware.checkAdminId),
     asyncHandler(validate(adminRequest.changePassword)),
     asyncHandler(adminController.changePassword),

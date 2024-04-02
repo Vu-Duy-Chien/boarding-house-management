@@ -27,13 +27,11 @@ export async function checkValidAdminLogin({email, password}) {
     const admin = await Admin.findOne({
         email,
         deleted: false,
-        status: 1,
     });
 
     if (admin) {
         const verified = comparePassword(password, admin.password);
         if (verified) {
-            admin.account_type = 1;
             return admin;
         }
     }
@@ -41,8 +39,8 @@ export async function checkValidAdminLogin({email, password}) {
     return false;
 }
 
-export function authToken(account_id, account_type) {
-    const access_token = generateToken(TOKEN_TYPE.AUTHORIZATION, {account_id, account_type}, JWT_EXPIRES_IN);
+export function authToken(account_id) {
+    const access_token = generateToken(TOKEN_TYPE.AUTHORIZATION, {account_id}, JWT_EXPIRES_IN);
     const decode = jwt.decode(access_token);
     const expire_in = decode.exp - decode.iat;
     return {
@@ -73,32 +71,7 @@ export async function blockToken(token) {
 }
 
 export async function profile(account) {
-    const result = await Admin.aggregate([
-        {
-            $match: {_id: account._id, deleted: false},
-        },
-        {
-            $lookup: {
-                from: "roles",
-                localField: "role_ids",
-                foreignField: "_id",
-                as: "permissions",
-            },
-        },
-        {
-            $addFields: {
-                permissions: "$permissions.name",
-            },
-        },
-        {
-            $project: {
-                password: 0,
-                deleted: 0,
-                role_ids: 0,
-            },
-        },
-    ]);
-    return result;
+    return account;
 }
 
 export async function updateProfile(currentUser, {name, email, phone, avatar}) {

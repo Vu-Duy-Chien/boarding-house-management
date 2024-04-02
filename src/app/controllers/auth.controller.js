@@ -5,7 +5,7 @@ import * as adminService from "@/app/services/admin.service";
 export async function login(req, res) {
     const validLogin = await authService.checkValidAdminLogin(req.body);
     if (validLogin) {
-        return responseSuccess(res, authService.authToken(validLogin._id, validLogin.account_type));
+        return responseSuccess(res, authService.authToken(validLogin._id));
     } else {
         return responseError(res, 400, "Email hoặc mật khẩu không đúng");
     }

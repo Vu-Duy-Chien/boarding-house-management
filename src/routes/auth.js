@@ -2,8 +2,8 @@ import {Router} from "express";
 import {asyncHandler} from "@/utils/handlers";
 import { validate, verifyToken} from "@/app/middleware/common";
 
-import * as authRequest from "@/app/requests/admin/auth.request";
-import * as authController from "@/app/controllers/admin/auth.controller";
+import * as authRequest from "@/app/requests/auth.request";
+import * as authController from "@/app/controllers/auth.controller";
 
 const router = Router();
 

@@ -1,8 +1,9 @@
 import jwt, {JsonWebTokenError, NotBeforeError, TokenExpiredError} from "jsonwebtoken";
 import {isUndefined} from "lodash";
 import {tokenBlocklist} from "@/app/services/auth.service";
-import { SECRET_KEY, TOKEN_TYPE} from "@/configs";
+import {SECRET_KEY, TOKEN_TYPE} from "@/configs";
 import {responseError, getToken} from "@/utils/helpers";
+import {Admin} from "@/app/models";
 
 export async function verifyToken(req, res, next) {
     try {
@@ -14,9 +15,8 @@ export async function verifyToken(req, res, next) {
                 const {type, data} = jwt.verify(token, SECRET_KEY);
 
                 if (type === TOKEN_TYPE.AUTHORIZATION) {
-                    let account;
-                    if (account) {
-                        account.account_type = data.account_type;
+                    const account = await Admin.findOne({_id: data.account_id, deleted: false});
+                    if(account){
                         req.currentAccount = account;
                         return next();
                     }
