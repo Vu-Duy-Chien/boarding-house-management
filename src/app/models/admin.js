@@ -27,6 +27,7 @@ export const Admin = createModel(
             type: [{type: String, enum: Object.values(PERMISSIONS)}],
             default: [],
         },
+        avatar: String,
     },
     {
         toJSON: {

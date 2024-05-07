@@ -1,35 +1,63 @@
-import { LINK_STATIC_URL } from "@/configs";
-import {Admin as User} from "@/app/models";
-import { generatePassword} from "@/utils/helpers";
+import {User} from "@/app/models";
+import {LINK_STATIC_URL} from "@/configs";
+import {FileUpload} from "@/utils/types";
 
-export async function create({name, email, password, phone}) {
+export async function create({name, email, phone, gender, citizen_no, birthplace, avatar}) {
+    if (avatar) {
+        avatar = avatar.save();
+    }
     const user = new User({
         name,
         email,
         phone,
-        password: generatePassword(password),
+        gender,
+        citizen_no,
+        birthplace,
+        avatar,
     });
     await user.save();
     return user;
 }
 
-export async function filter({q, page, per_page, field, sort_order}) {
+export async function update(user, {name, email, phone, gender, citizen_no, birthplace, avatar}) {
+    if (avatar) {
+        if (user.avatar) {
+            FileUpload.remove(user.avatar);
+        }
+        avatar = avatar.save("images");
+        user.avatar = avatar;
+    }
+    user.name = name;
+    user.email = email;
+    user.phone = phone;
+    user.gender = gender;
+    user.citizen_no = citizen_no;
+    user.birthplace = birthplace;
+    await user.save();
+    return user;
+}
+
+export async function getList({q, page, per_page, field, sort_order}) {
     q = q ? {$regex: q, $options: "i"} : null;
+    page = page ? parseInt(page) : 1;
+    per_page = per_page ? parseInt(per_page) : 20;
+    field = field || "created_at";
+    sort_order = sort_order ? (sort_order === "asc" ? 1 : -1) : -1;
 
     const filter = {
-        ...(q && {$or: [{name: q}, {email: q}, {phone: q}]}),
+        deleted: false,
+        ...(q && {$or: [{name: q}, {email: q}, {phone: q}, {birthplace: q}, {citizen_no: q}]}),
     };
 
-    const users = (
-        await User.find(filter, {password: 0})
-            .skip((page - 1) * per_page)
-            .limit(per_page)
-            .sort({[field]: sort_order})
-    ).map((user) => {
+    const users = await User.find(filter, {deleted: 0})
+        .skip((page - 1) * per_page)
+        .limit(per_page)
+        .sort({[field]: sort_order});
+
+    users.forEach((user) => {
         if (user.avatar) {
             user.avatar = LINK_STATIC_URL + user.avatar;
         }
-        return user;
     });
 
     const total = await User.countDocuments(filter);
@@ -37,25 +65,11 @@ export async function filter({q, page, per_page, field, sort_order}) {
 }
 
 export async function details(userId) {
-    const user = await User.findById(userId, {password: 0});
-    user.avatar = LINK_STATIC_URL + user.avatar;
-    return user;
-}
-
-export async function update(user, {name, email, phone}) {
-    user.name = name;
-    user.email = email;
-    user.phone = phone;
-    await user.save();
-    return user;
-}
-
-export async function resetPassword(user, new_password) {
-    user.password = generatePassword(new_password);
-    await user.save();
+    const user = await User.findById(userId, {deleted: 0});
     return user;
 }
 
 export async function remove(user) {
-    await User.deleteOne({_id: user._id});
+    user.deleted = true;
+    await user.save();
 }

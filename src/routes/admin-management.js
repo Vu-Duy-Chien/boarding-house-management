@@ -5,7 +5,7 @@ import * as adminRequest from "@/app/requests/admin/admin.request";
 import * as adminController from "@/app/controllers/admin/admin.controller";
 
 import {asyncHandler} from "@/utils/handlers";
-import {validate, verifyToken} from "@/app/middleware/common";
+import {upload, validate, verifyToken} from "@/app/middleware/common";
 import {checkSupperAdmin} from "@/app/middleware/common/check-supper-admin";
 
 const router = Router();
@@ -15,12 +15,14 @@ router.use(asyncHandler(checkSupperAdmin));
 
 router.post(
     "/",
+    asyncHandler(upload),
     asyncHandler(validate(adminRequest.createAdmin)),
     asyncHandler(adminController.createAdmin)
 );
 
 router.put(
     "/:adminId",
+    asyncHandler(upload),
     asyncHandler(adminMiddleware.checkAdminId),
     asyncHandler(validate(adminRequest.updateAdmin)),
     asyncHandler(adminController.updateAdmin),

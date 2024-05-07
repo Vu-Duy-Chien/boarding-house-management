@@ -11,16 +11,13 @@ export const BoardingRoom = createModel(
             ref: "BoardingHouse",
         },
         room_number: {
-            type: Number,
+            type: String,
             required: true,
         },
         area: {
             type: Number,
         },
         price: {
-            type: Number,
-        },
-        deposit_price: {
             type: Number,
         },
         status: {

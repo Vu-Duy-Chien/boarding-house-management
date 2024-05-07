@@ -1,7 +1,7 @@
 import Joi from "joi";
 import {Admin} from "@/app/models";
 import {MAX_STRING_SIZE, VALIDATE_PASSWORD_REGEX, VALIDATE_PHONE_REGEX} from "@/configs";
-import {AsyncValidate} from "@/utils/types";
+import {AsyncValidate, FileUpload} from "@/utils/types";
 import {validateName} from "@/utils/helpers/name.helper";
 
 export const createAdmin = Joi.object({
@@ -41,6 +41,16 @@ export const createAdmin = Joi.object({
                     return value;
                 }),
         ),
+    avatar: Joi.object({
+        originalname: Joi.string().trim().required().label("Tên ảnh"),
+        mimetype: Joi.valid("image/jpeg", "image/png", "image/svg+xml", "image/webp")
+            .required()
+            .label("Định dạng ảnh"),
+        buffer: Joi.binary().required().label("Ảnh đại diện"),
+    })
+        .instance(FileUpload)
+        .allow("")
+        .label("Ảnh đại diện")
 });
 
 export const updateAdmin = Joi.object({
@@ -72,6 +82,16 @@ export const updateAdmin = Joi.object({
                     return !admin ? value : helpers.error("any.exists");
                 }),
         ),
+    avatar: Joi.object({
+        originalname: Joi.string().trim().required().label("Tên ảnh"),
+        mimetype: Joi.valid("image/jpeg", "image/png", "image/svg+xml", "image/webp")
+            .required()
+            .label("Định dạng ảnh"),
+        buffer: Joi.binary().required().label("Ảnh đại diện"),
+    })
+        .instance(FileUpload)
+        .allow("")
+        .label("Ảnh đại diện")
 });
 
 export const changeStatus = Joi.object({

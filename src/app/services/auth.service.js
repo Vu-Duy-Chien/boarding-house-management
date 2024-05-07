@@ -1,7 +1,7 @@
 import moment from "moment";
 import jwt from "jsonwebtoken";
 import {Admin} from "../models";
-import {cache, JWT_EXPIRES_IN, TOKEN_TYPE} from "@/configs";
+import {cache, JWT_EXPIRES_IN, LINK_STATIC_URL, TOKEN_TYPE} from "@/configs";
 import {FileUpload} from "@/utils/types";
 import {comparePassword, generatePassword, generateToken} from "@/utils/helpers";
 import {capitalizeName} from "@/utils/helpers/name.helper";
@@ -71,6 +71,9 @@ export async function blockToken(token) {
 }
 
 export async function profile(account) {
+    if (account.avatar) {
+        account.avatar = LINK_STATIC_URL + account.avatar;
+    }
     return account;
 }
 

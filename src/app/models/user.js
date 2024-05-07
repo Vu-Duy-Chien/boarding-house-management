@@ -28,6 +28,7 @@ export const User = createModel(
         birthplace: {
             type: String
         },
+        avatar: String
     },
     {
         toJSON: {

@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {asyncHandler} from "@/utils/handlers";
-import { validate, verifyToken} from "@/app/middleware/common";
+import { upload, validate, verifyToken} from "@/app/middleware/common";
 
 import * as authRequest from "@/app/requests/auth.request";
 import * as authController from "@/app/controllers/auth.controller";
@@ -28,6 +28,7 @@ router.get(
 router.put(
     "/me",
     asyncHandler(verifyToken),
+    asyncHandler(upload),
     asyncHandler(validate(authRequest.updateProfile)),
     asyncHandler(authController.updateProfile),
 );

@@ -14,7 +14,14 @@ export const BoardingHouse = createModel(
         },
         description: {
             type: String,
-        }
+        },
+        electricity_unit_price: {
+            type: Number,
+        },
+        water_unit_price: {
+            type: Number,
+        },
+        avatar: String,
     },
     {
         toJSON: {
@@ -24,6 +31,6 @@ export const BoardingHouse = createModel(
                 const {deleted, ...result} = ret;
                 return result;
             },
-        }
+        },
     },
 );

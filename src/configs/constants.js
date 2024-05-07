@@ -24,7 +24,7 @@ export const NODE_ENV = Object.values(APP_ENV).includes(process.env.NODE_ENV)
 
 export const APP_NAME = process.env.APP_NAME;
 export const APP_DEBUG = process.env.APP_DEBUG === "true";
-export const APP_URL_API = process.env.APP_URL_API;
+export const APP_URL = process.env.APP_URL;
 export const APP_URL_CLIENT = process.env.APP_URL_CLIENT;
 export const OTHER_URLS_CLIENT = process.env.OTHER_URLS_CLIENT
     ? JSON.parse(process.env.OTHER_URLS_CLIENT)
@@ -33,7 +33,7 @@ export const SECRET_KEY = process.env.SECRET_KEY;
 export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 export const REQUESTS_LIMIT_PER_MINUTE = parseInt(process.env.REQUESTS_LIMIT_PER_MINUTE, 10) || 1000;
 
-export const LINK_STATIC_URL = `${APP_URL_API}/static/`;
+export const LINK_STATIC_URL = `${APP_URL}/static/`;
 
 export const DATABASE_URI =
     "mongodb" +

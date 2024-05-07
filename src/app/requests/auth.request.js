@@ -1,9 +1,9 @@
 import Joi from "joi";
 import {MAX_STRING_SIZE, VALIDATE_PHONE_REGEX} from "@/configs";
-import {AsyncValidate} from "@/utils/types";
+import {AsyncValidate, FileUpload} from "@/utils/types";
 import {comparePassword} from "@/utils/helpers";
-import { Admin } from "../models";
-import { validateName } from "@/utils/helpers/name.helper";
+import {Admin} from "../models";
+import {validateName} from "@/utils/helpers/name.helper";
 
 export const changePassword = Joi.object({
     password: Joi.string()
@@ -50,4 +50,14 @@ export const updateProfile = Joi.object({
             }
             return value;
         }),
+    avatar: Joi.object({
+        originalname: Joi.string().trim().required().label("Tên ảnh"),
+        mimetype: Joi.valid("image/jpeg", "image/png", "image/svg+xml", "image/webp")
+            .required()
+            .label("Định dạng ảnh"),
+        buffer: Joi.binary().required().label("Ảnh đại diện"),
+    })
+        .instance(FileUpload)
+        .allow("")
+        .label("Ảnh đại diện")
 });

@@ -1,25 +1,46 @@
 import {generatePassword} from "@/utils/helpers";
 import {Admin} from "../models";
+import {FileUpload} from "@/utils/types";
+import {LINK_STATIC_URL} from "@/configs";
 
-export async function updateProfile(admin, {name, phone}) {
+export async function updateProfile(admin, {name, phone, avatar}) {
     admin.name = name;
     admin.phone = phone || null;
+
+    if (avatar) {
+        if (admin.avatar) {
+            FileUpload.remove(admin.avatar);
+        }
+        avatar = avatar.save("images");
+        admin.avatar = avatar;
+    }
 
     return await admin.save();
 }
 
-export async function create({name, email, password, phone}) {
+export async function create({name, email, password, phone, avatar}) {
+    if (avatar) {
+        avatar = avatar.save();
+    }
     const admin = new Admin({
         name,
         email,
         phone: phone || null,
-        password: generatePassword(password)
+        password: generatePassword(password),
+        avatar,
     });
     await admin.save();
     return admin;
 }
 
-export async function updateAdmin(admin, {name, email, phone}) {
+export async function updateAdmin(admin, {name, email, phone, avatar}) {
+    if (avatar) {
+        if (admin.avatar) {
+            FileUpload.remove(admin.avatar);
+        }
+        avatar = avatar.save("images");
+        admin.avatar = avatar;
+    }
     admin.name = name;
     admin.email = email;
     admin.phone = phone || null;
@@ -60,6 +81,12 @@ export async function getList({q, page, per_page, field, sort_order}, req) {
         .skip((page - 1) * per_page)
         .limit(per_page)
         .sort({[field]: sort_order});
+
+    admins.forEach((admin) => {
+        if (admin.avatar) {
+            admin.avatar = LINK_STATIC_URL + admin.avatar;
+        }
+    });
 
     const total = await Admin.countDocuments(filter);
     return {total, page, per_page, admins};
