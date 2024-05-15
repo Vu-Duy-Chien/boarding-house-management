@@ -1,10 +1,15 @@
 import { GENDER_TYPE } from "@/configs";
-import {createModel} from "./base";
+import {ObjectId, createModel} from "./base";
 
 export const User = createModel(
     "User",
     "users",
     {
+        house_id: {
+            type: ObjectId,
+            required: true,
+            ref: "BoardingHouse",
+        },
         name: {
             type: String,
             required: true,
@@ -20,15 +25,20 @@ export const User = createModel(
         gender: {
             type: Number,
             enum: Object.values(GENDER_TYPE),
+            required: true,
         },
         citizen_no: {
             type: String,
             required: true,
         },
         birthplace: {
-            type: String
+            type: String,
+            required: true,
         },
-        avatar: String
+        avatar: {
+            type: String,
+            required: true,
+        }
     },
     {
         toJSON: {

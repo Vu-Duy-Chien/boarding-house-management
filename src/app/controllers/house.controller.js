@@ -19,3 +19,20 @@ export async function removeHouse(req, res) {
 export async function getList(req, res) {
     return responseSuccess(res, await houseService.getList(req.query));
 }
+
+export async function getDetail(req, res) {
+    return responseSuccess(res, req.house);
+}
+
+export async function updateElectricityWater(req, res) {
+    await houseService.editElectricityWater(req.house, req.body);
+    return responseSuccess(res, null, 201);
+}
+
+export async function getElectricityWaterPrice(req, res) {
+    const result = {
+        electricity_unit_price: req.house.electricity_unit_price,
+        water_unit_price: req.house.water_unit_price,
+    };
+    return responseSuccess(res, result);
+}

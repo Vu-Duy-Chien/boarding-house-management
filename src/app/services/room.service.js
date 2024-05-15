@@ -2,52 +2,18 @@ import {ROOM_STATUS} from "@/configs";
 import {Bill, BoardingRoom, Contract, ContractService, MeterReading} from "../models";
 import _ from "lodash";
 
-export async function create(
-    {
-        room_number,
-        area,
-        price,
-        maximum,
-        floor,
-        current_electric_reading,
-        current_water_reading,
-    },
-    house,
-) {
+export async function create(data, house) {
     const room = new BoardingRoom({
+        ...data,
         house_id: house._id,
-        room_number,
-        area,
-        price,
         status: ROOM_STATUS.NOT_RENTED,
-        maximum,
-        floor,
-        current_electric_reading,
-        current_water_reading,
     });
     await room.save();
     return room;
 }
 
-export async function update(
-    {
-        room_number,
-        area,
-        price,
-        maximum,
-        floor,
-        current_electric_reading,
-        current_water_reading,
-    },
-    room
-) {
-    room.room_number = room_number;
-    room.area = area;
-    room.price = price;
-    room.maximum = maximum;
-    room.floor = floor;
-    room.current_electric_reading = current_electric_reading;
-    room.current_water_reading = current_water_reading;
+export async function update(data, room) {
+    Object.assign(room, data);
     await room.save();
     return room;
 }
@@ -89,7 +55,7 @@ export async function getList({q, page, per_page, field, sort_order, status, flo
     let filter = {
         house_id: house._id,
         deleted: false,
-        ...(q && {$or: [{room_number: q}]}),
+        ...(q && {$or: [{name: q}]}),
     };
 
     if (Object.values(ROOM_STATUS).includes(Number(status))) {
@@ -106,4 +72,56 @@ export async function getList({q, page, per_page, field, sort_order, status, flo
 
     const total = await BoardingRoom.countDocuments(filter);
     return {total, page, per_page, rooms};
+}
+
+export async function getAll(houseId, {status}) {
+    let filter = {house_id: houseId, deleted: false};
+
+    if (Object.values(ROOM_STATUS).includes(parseInt(status))) {
+        filter = {...filter, status: {$ne: parseInt(status)}};
+    }
+
+    const rooms = await BoardingRoom.find(filter, {deleted: 0});
+    return rooms;
+}
+
+export async function getListRoomUnderContract(house) {
+    const currentDate = new Date();
+
+    const rooms = await BoardingRoom.aggregate([
+        {
+            $match: {
+                house_id: house._id,
+                deleted: false,
+            },
+        },
+        {
+            $lookup: {
+                from: "contracts",
+                localField: "_id",
+                foreignField: "room_id",
+                as: "contracts",
+            },
+        },
+        {
+            $unwind: "$contracts",
+        },
+        {
+            $match: {
+                "contracts.deleted": false,
+                "contracts.start_date": {$lte: currentDate},
+                "contracts.end_date": {$gte: currentDate},
+            },
+        },
+        {
+            $group: {
+                _id: "$_id",
+                house_id: {$first: "$house_id"},
+                name: {$first: "$name"},
+                status: {$first: "$status"},
+            },
+        }
+    ]);
+
+    return rooms;
 }

@@ -20,6 +20,10 @@ export const Service = createModel(
             type: Number,
             required: true,
         },
+        unit: {
+            type: String,
+            required: true,
+        },
     },
     {
         toJSON: {

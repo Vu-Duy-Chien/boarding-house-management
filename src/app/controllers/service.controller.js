@@ -19,3 +19,7 @@ export async function removeService(req, res) {
 export async function getList(req, res) {
     return responseSuccess(res, await serviceService.getList(req.query, req.house));
 }
+
+export async function getAllService(req, res) {
+    return responseSuccess(res, await serviceService.getAll(req.house));
+}

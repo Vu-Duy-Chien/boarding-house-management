@@ -25,10 +25,16 @@ export async function getListAdmin(req, res) {
 }
 
 export async function changeStatus(req, res) {
+    if (req.currentAccount._id.equals(req.admin._id)) {
+        return responseError(res, 400, "Không thể đổi trạng thái của chính mình.");
+    }
     return responseSuccess(res, await adminService.changeStatus(req.admin, req.body.status));
 }
 
 export async function changePassword(req, res) {
+    if (req.currentAccount._id.equals(req.admin._id)) {
+        return responseError(res, 400, "Không thể tạo mật khẩu mới của chính mình.");
+    }
     return responseSuccess(res, await adminService.changePassword(req.admin, req.body.password));
 }
 

@@ -1,7 +1,7 @@
 import {generatePassword} from "@/utils/helpers";
 import {Admin} from "../models";
 import {FileUpload} from "@/utils/types";
-import {LINK_STATIC_URL} from "@/configs";
+import {ADMIN_STATUS, LINK_STATIC_URL} from "@/configs";
 
 export async function updateProfile(admin, {name, phone, avatar}) {
     admin.name = name;
@@ -90,4 +90,16 @@ export async function getList({q, page, per_page, field, sort_order}, req) {
 
     const total = await Admin.countDocuments(filter);
     return {total, page, per_page, admins};
+}
+
+export async function getAllAdmin() {
+
+    const admins = await Admin.find({deleted: false, status: ADMIN_STATUS.UNLOCK}, {password: 0, deleted: 0});
+
+    admins.forEach((admin) => {
+        if (admin.avatar) {
+            admin.avatar = LINK_STATIC_URL + admin.avatar;
+        }
+    });
+    return admins;
 }

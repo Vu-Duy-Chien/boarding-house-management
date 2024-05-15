@@ -35,6 +35,13 @@ router.patch(
     asyncHandler(adminController.changePassword),
 );
 
+router.patch(
+    "/update-status/:adminId",
+    asyncHandler(adminMiddleware.checkAdminId),
+    asyncHandler(validate(adminRequest.changeStatus)),
+    asyncHandler(adminController.changeStatus),
+);
+
 router.delete(
     "/:adminId",
     asyncHandler(adminMiddleware.checkAdminId),

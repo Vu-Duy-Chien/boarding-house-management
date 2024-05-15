@@ -13,6 +13,9 @@ const router = Router();
 router.use(asyncHandler(verifyToken));
 
 router.get("/:houseId", asyncHandler(houseMiddleware.checkHouseId), asyncHandler(roomController.getList));
+router.get("/:houseId/all-rooms", asyncHandler(houseMiddleware.checkHouseId), asyncHandler(roomController.getAllRooms));
+
+router.get("/:houseId/under-contract", asyncHandler(houseMiddleware.checkHouseId), asyncHandler(roomController.getRoomsIsUnderContract));
 
 router.post(
     "/:houseId",

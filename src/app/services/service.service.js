@@ -1,20 +1,16 @@
 import {ContractService, Service} from "../models";
 
-export async function create(house, {name, description, price}) {
+export async function create(house, data) {
     const service = new Service({
+        ...data,
         house_id: house._id,
-        name,
-        description,
-        price,
     });
     await service.save();
     return service;
 }
 
-export async function update(service, {name, description, price}) {
-    service.name = name;
-    service.address = price;
-    service.description = description;
+export async function update(service, data) {
+    Object.assign(service, data);
     await service.save();
     return service;
 }
@@ -45,4 +41,8 @@ export async function getList({q, page, per_page, field, sort_order}, house) {
 
     const total = await Service.countDocuments(filter);
     return {total, page, per_page, services};
+}
+
+export async function getAll(house) {
+    return await Service.find({house_id: house._id, deleted: false}, {deleted: 0});
 }

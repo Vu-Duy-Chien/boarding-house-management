@@ -19,6 +19,11 @@ export const Contract = createModel(
             required: true,
             ref: "User",
         },
+        admin_id: {
+            type: ObjectId,
+            required: true,
+            ref: "Admin",
+        },
         code: {
             type: String,
             required: true,
@@ -31,11 +36,11 @@ export const Contract = createModel(
             type: Date,
             required: true,
         },
-        total_amount: {
+        room_price: {
             type: Number,
             required: true,
         },
-        deposited_amount: {
+        deposit_price: {
             type: Number,
             required: true,
         },

@@ -1,6 +1,6 @@
 import Joi from "joi";
 import {Admin} from "@/app/models";
-import {MAX_STRING_SIZE, VALIDATE_PASSWORD_REGEX, VALIDATE_PHONE_REGEX} from "@/configs";
+import {ADMIN_STATUS, MAX_STRING_SIZE, VALIDATE_PASSWORD_REGEX, VALIDATE_PHONE_REGEX} from "@/configs";
 import {AsyncValidate, FileUpload} from "@/utils/types";
 import {validateName} from "@/utils/helpers/name.helper";
 
@@ -49,8 +49,8 @@ export const createAdmin = Joi.object({
         buffer: Joi.binary().required().label("Ảnh đại diện"),
     })
         .instance(FileUpload)
-        .allow("")
-        .label("Ảnh đại diện")
+        .required()
+        .label("Ảnh đại diện"),
 });
 
 export const updateAdmin = Joi.object({
@@ -90,12 +90,11 @@ export const updateAdmin = Joi.object({
         buffer: Joi.binary().required().label("Ảnh đại diện"),
     })
         .instance(FileUpload)
-        .allow("")
-        .label("Ảnh đại diện")
+        .label("Ảnh đại diện"),
 });
 
 export const changeStatus = Joi.object({
-    status: Joi.number().valid(1, 2).required().label("Trạng thái"),
+    status: Joi.number().valid(ADMIN_STATUS.LOCKED, ADMIN_STATUS.UNLOCK).required().label("Trạng thái"),
 });
 
 export const changePassword = Joi.object({

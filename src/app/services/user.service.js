@@ -2,11 +2,12 @@ import {User} from "@/app/models";
 import {LINK_STATIC_URL} from "@/configs";
 import {FileUpload} from "@/utils/types";
 
-export async function create({name, email, phone, gender, citizen_no, birthplace, avatar}) {
+export async function create({name, email, phone, gender, citizen_no, birthplace, avatar}, house) {
     if (avatar) {
         avatar = avatar.save();
     }
     const user = new User({
+        house_id: house._id,
         name,
         email,
         phone,
@@ -37,7 +38,7 @@ export async function update(user, {name, email, phone, gender, citizen_no, birt
     return user;
 }
 
-export async function getList({q, page, per_page, field, sort_order}) {
+export async function getList({q, page, per_page, field, sort_order}, house) {
     q = q ? {$regex: q, $options: "i"} : null;
     page = page ? parseInt(page) : 1;
     per_page = per_page ? parseInt(per_page) : 20;
@@ -46,6 +47,7 @@ export async function getList({q, page, per_page, field, sort_order}) {
 
     const filter = {
         deleted: false,
+        house_id: house._id,
         ...(q && {$or: [{name: q}, {email: q}, {phone: q}, {birthplace: q}, {citizen_no: q}]}),
     };
 
@@ -72,4 +74,14 @@ export async function details(userId) {
 export async function remove(user) {
     user.deleted = true;
     await user.save();
+}
+
+export async function getAllUser(house) {
+    const users = await User.find({house_id: house._id, deleted: false}, {deleted: 0});
+    users.forEach((user) => {
+        if (user.avatar) {
+            user.avatar = LINK_STATIC_URL + user.avatar;
+        }
+    });
+    return users;
 }

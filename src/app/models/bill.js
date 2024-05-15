@@ -10,6 +10,11 @@ export const Bill = createModel(
             required: true,
             ref: "BoardingHouse",
         },
+        room_id: {
+            type: ObjectId,
+            required: true,
+            ref: "BoardingRoom",
+        },
         contract_id: {
             type: ObjectId,
             required: true,
@@ -40,27 +45,22 @@ export const Bill = createModel(
             type: Number,
             required: true,
         },
-        electric_reading_id: {
+        other_costs: {
+            type: Number,
+            default: 0,
+        },
+        meter_reading_id: {
             type: ObjectId,
-            required: true,
             ref: "MeterReading",
         },
-        water_reading_id: {
-            type: ObjectId,
-            required: true,
-            ref: "MeterReading",
-        },
-        month: {
-            type: Number,
-            required: true,
-        },
-        year: {
-            type: Number,
+        time: {
+            type: Date,
             required: true,
         },
         status: {
             type: Number,
-            enum: BILL_STATUS.UNPAID
+            enum: Object.values(BILL_STATUS),
+            default: BILL_STATUS.UNPAID
         },
     },
     {

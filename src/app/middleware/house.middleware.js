@@ -13,5 +13,5 @@ export const checkHouseId = async function (req, res, next) {
         }
     }
 
-    return responseError(res, 404, "Khu trọ không tồn tại hoặc đã bị xóa");
+    return responseError(res, 404, "Nhà trọ không tồn tại hoặc đã bị xóa");
 };

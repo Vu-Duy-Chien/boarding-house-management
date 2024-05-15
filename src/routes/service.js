@@ -13,6 +13,7 @@ const router = Router();
 router.use(asyncHandler(verifyToken));
 
 router.get("/:houseId", asyncHandler(houseMiddleware.checkHouseId), asyncHandler(serviceController.getList));
+router.get("/:houseId/all-service", asyncHandler(houseMiddleware.checkHouseId), asyncHandler(serviceController.getAllService));
 
 router.post(
     "/:houseId",

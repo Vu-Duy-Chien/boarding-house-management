@@ -2,7 +2,7 @@ import {responseSuccess} from "@/utils/helpers";
 import * as userService from "@/app/services/user.service";
 
 export async function createUser(req, res) {
-    await userService.create(req.body);
+    await userService.create(req.body, req.house);
     return responseSuccess(res, null, 201);
 }
 
@@ -17,5 +17,9 @@ export async function removeUser(req, res) {
 }
 
 export async function getListUser(req, res) {
-    return responseSuccess(res, await userService.getList(req.query, req));
+    return responseSuccess(res, await userService.getList(req.query, req.house));
+}
+
+export async function getAllUser(req, res) {
+    return responseSuccess(res, await userService.getAllUser(req.house));
 }

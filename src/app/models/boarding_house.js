@@ -10,18 +10,23 @@ export const BoardingHouse = createModel(
         },
         address: {
             type: String,
-            default: null,
+            required: true,
         },
         description: {
             type: String,
         },
         electricity_unit_price: {
             type: Number,
+            default: 3000
         },
         water_unit_price: {
             type: Number,
+            default: 25000
         },
-        avatar: String,
+        avatar: {
+            type: String,
+            required: true,
+        },
     },
     {
         toJSON: {

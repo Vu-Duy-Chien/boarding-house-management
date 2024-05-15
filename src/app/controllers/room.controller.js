@@ -19,3 +19,11 @@ export async function removeRoom(req, res) {
 export async function getList(req, res) {
     return responseSuccess(res, await roomService.getList(req.query, req.house));
 }
+
+export async function getAllRooms(req, res) {
+    return responseSuccess(res, await roomService.getAll(req.house._id, req.query));
+}
+
+export async function getRoomsIsUnderContract(req, res){
+    return responseSuccess(res, await roomService.getListRoomUnderContract(req.house));
+}

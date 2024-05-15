@@ -31,7 +31,21 @@ router.delete(
     asyncHandler(houseMiddleware.checkHouseId),
     asyncHandler(houseController.removeHouse),
 );
+router.patch(
+    "/:houseId/electricity-water",
+    asyncHandler(houseMiddleware.checkHouseId),
+    asyncHandler(validate(houseRequest.updateElectricityWater)),
+    asyncHandler(houseController.updateElectricityWater),
+);
+
+router.get(
+    "/:houseId/electricity-water",
+    asyncHandler(houseMiddleware.checkHouseId),
+    asyncHandler(houseController.getElectricityWaterPrice),
+);
 
 router.get("/", asyncHandler(houseController.getList));
+
+router.get("/:houseId", asyncHandler(houseMiddleware.checkHouseId), asyncHandler(houseController.getDetail));
 
 export default router;

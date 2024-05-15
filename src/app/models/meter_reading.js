@@ -1,4 +1,3 @@
-import {UTILITY_TYPE} from "@/configs";
 import {ObjectId, createModel} from "./base";
 
 export const MeterReading = createModel(
@@ -15,25 +14,25 @@ export const MeterReading = createModel(
             required: true,
             ref: "BoardingRoom",
         },
-        type: {
-            type: Number,
-            required: true,
-            enum: Object.values(UTILITY_TYPE),
-        },
-        month: {
-            type: Number,
+        time: {
+            type: Date,
             required: true,
         },
-        year: {
+        old_electric_reading: {
             type: Number,
             required: true,
         },
-        first_month_reading: {
+        old_water_reading: {
             type: Number,
             required: true,
         },
-        last_month_reading: {
+        current_electric_reading: {
             type: Number,
+            required: true,
+        },
+        current_water_reading: {
+            type: Number,
+            required: true,
         },
     },
     {

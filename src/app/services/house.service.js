@@ -1,8 +1,8 @@
-import { LINK_STATIC_URL } from "@/configs";
+import {LINK_STATIC_URL} from "@/configs";
 import {Bill, BoardingHouse, BoardingRoom, Contract, ContractService, MeterReading, Service} from "../models";
-import { FileUpload } from "@/utils/types";
+import {FileUpload} from "@/utils/types";
 
-export async function create({name, address, description, electricity_unit_price, water_unit_price, avatar}) {
+export async function create({name, address, description, avatar}) {
     if (avatar) {
         avatar = avatar.save();
     }
@@ -11,18 +11,13 @@ export async function create({name, address, description, electricity_unit_price
         name,
         address,
         description,
-        electricity_unit_price,
-        water_unit_price,
         avatar,
     });
     await house.save();
     return house;
 }
 
-export async function update(
-    house,
-    {name, address, description, electricity_unit_price, water_unit_price, avatar},
-) {
+export async function update(house, {name, address, description, avatar}) {
     if (avatar) {
         if (house.avatar) {
             FileUpload.remove(house.avatar);
@@ -33,8 +28,6 @@ export async function update(
     house.name = name;
     house.address = address;
     house.description = description;
-    house.electricity_unit_price = electricity_unit_price;
-    house.water_unit_price = water_unit_price;
     await house.save();
     return house;
 }
@@ -84,4 +77,11 @@ export async function getList({q, page, per_page, field, sort_order}) {
 
     const total = await BoardingHouse.countDocuments(filter);
     return {total, page, per_page, houses};
+}
+
+export async function editElectricityWater(house, {electricity_unit_price, water_unit_price}) {
+    house.electricity_unit_price = electricity_unit_price;
+    house.water_unit_price = water_unit_price;
+
+    return await house.save();
 }

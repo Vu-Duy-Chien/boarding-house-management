@@ -1,4 +1,4 @@
-import {PERMISSIONS} from "@/configs";
+import {ADMIN_STATUS, PERMISSIONS} from "@/configs";
 import {createModel} from "./base";
 
 export const Admin = createModel(
@@ -27,7 +27,15 @@ export const Admin = createModel(
             type: [{type: String, enum: Object.values(PERMISSIONS)}],
             default: [],
         },
-        avatar: String,
+        status: {
+            type: Number,
+            enum: Object.values(ADMIN_STATUS),
+            default: ADMIN_STATUS.UNLOCK,
+        },
+        avatar: {
+            type: String,
+            required: true
+        },
     },
     {
         toJSON: {

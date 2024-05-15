@@ -13,13 +13,19 @@ export const BILL_STATUS = {
     UNPAID: 2,
 };
 
-export const UTILITY_TYPE = {
-    ELECTRICITY: 0,
-    WATER: 1,
-};
-
 export const ROOM_STATUS = {
     NOT_RENTED: 0,
     DEPOSITED: 1,
     RENTED: 2,
+};
+
+export const ADMIN_STATUS = {
+    LOCKED: 0,
+    UNLOCK: 1,
+};
+
+export const CONTRACT_STATUS = {
+    PENDING: 0,
+    ACTIVE: 1,
+    EXPIRED: 2,
 };

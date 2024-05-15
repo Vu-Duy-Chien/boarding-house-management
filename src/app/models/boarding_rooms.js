@@ -10,15 +10,21 @@ export const BoardingRoom = createModel(
             required: true,
             ref: "BoardingHouse",
         },
-        room_number: {
+        name: {
             type: String,
             required: true,
         },
         area: {
             type: Number,
+            required: true,
         },
         price: {
             type: Number,
+            required: true,
+        },
+        deposit_price: {
+            type: Number,
+            required: true,
         },
         status: {
             type: Number,
@@ -26,15 +32,19 @@ export const BoardingRoom = createModel(
         },
         maximum: {
             type: Number,
+            required: true,
         },
         floor: {
             type: Number,
+            required: true,
         },
         current_electric_reading: {
             type: Number,
+            required: true,
         },
         current_water_reading: {
             type: Number,
+            required: true,
         },
     },
     {

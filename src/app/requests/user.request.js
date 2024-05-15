@@ -14,12 +14,12 @@ export const createUser = Joi.object({
         buffer: Joi.binary().label("Ảnh đại diện"),
     })
         .instance(FileUpload)
-        .allow("")
+        .required()
         .label("Ảnh đại diện"),
     email: Joi.string()
         .trim()
-        .allow("")
         .max(MAX_STRING_SIZE)
+        .required()
         .lowercase()
         .email()
         .label("Email")
@@ -44,9 +44,21 @@ export const createUser = Joi.object({
                     return value;
                 }),
         ),
-    gender: Joi.number().valid(GENDER_TYPE.FEMALE, GENDER_TYPE.MALE).label("Giới tính"),
-    citizen_no: Joi.string().required().label("Số căn cước công dân"),
-    birthplace: Joi.string().trim().allow("").label("Quê quán"),
+    gender: Joi.number().valid(GENDER_TYPE.FEMALE, GENDER_TYPE.MALE).required().label("Giới tính"),
+    citizen_no: Joi.string()
+        .required()
+        .label("Số căn cước công dân")
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    if (value) {
+                        const user = await User.findOne({citizen_no: value, deleted: false});
+                        return !user ? value : helpers.error("any.exists");
+                    }
+                    return value;
+                }),
+        ),
+    birthplace: Joi.string().trim().required().label("Quê quán"),
 });
 
 export const updateUser = Joi.object({
@@ -59,11 +71,10 @@ export const updateUser = Joi.object({
         buffer: Joi.binary().label("Ảnh đại diện"),
     })
         .instance(FileUpload)
-        .allow("")
         .label("Ảnh đại diện"),
     email: Joi.string()
         .trim()
-        .allow("")
+        .required()
         .max(MAX_STRING_SIZE)
         .lowercase()
         .email()
@@ -91,7 +102,24 @@ export const updateUser = Joi.object({
                     return value;
                 }),
         ),
-    gender: Joi.number().valid(GENDER_TYPE.FEMALE, GENDER_TYPE.MALE).label("Giới tính"),
-    citizen_no: Joi.string().required().label("Số căn cước công dân"),
-    birthplace: Joi.string().trim().allow("").label("Quê quán"),
+    gender: Joi.number().valid(GENDER_TYPE.FEMALE, GENDER_TYPE.MALE).required().label("Giới tính"),
+    citizen_no: Joi.string()
+        .required()
+        .label("Số căn cước công dân")
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function (req) {
+                    if (value) {
+                        const userId = req.user._id;
+                        const user = await User.findOne({
+                            citizen_no: value,
+                            deleted: false,
+                            _id: {$ne: userId},
+                        });
+                        return !user ? value : helpers.error("any.exists");
+                    }
+                    return value;
+                }),
+        ),
+    birthplace: Joi.string().trim().required().label("Quê quán"),
 });
