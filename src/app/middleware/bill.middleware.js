@@ -19,7 +19,7 @@ export const checkBillByContract = async function (req, res, next) {
         return next();
     } else {
         if (bill.status === BILL_STATUS.PAID) {
-            return responseError(res, 400, "Hóa đơn tháng này đã được thanh toán.");
+            return responseError(res, 404, "Hóa đơn tháng này đã được thanh toán.");
         }
         req.bill = bill;
         return next();

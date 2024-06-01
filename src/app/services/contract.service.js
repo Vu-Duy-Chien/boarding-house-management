@@ -1,5 +1,5 @@
 import moment from "moment";
-import {Contract, ContractService} from "../models";
+import {BoardingRoom, Contract, ContractService} from "../models";
 import {CONTRACT_STATUS, ROOM_STATUS} from "@/configs";
 
 export async function create(req) {
@@ -15,8 +15,8 @@ export async function create(req) {
         user_id: user._id,
         admin_id: admin._id,
         code,
-        start_date,
-        end_date,
+        start_date: moment(start_date).startOf("day").toDate(),
+        end_date: moment(end_date).startOf("day").toDate(),
         room_price: room.price,
         deposit_price: room.deposit_price,
     });
@@ -39,8 +39,8 @@ export async function create(req) {
 }
 
 export async function update({start_date, end_date, services}, contract) {
-    contract.start_date = start_date;
-    contract.end_date = end_date;
+    contract.start_date = moment(start_date).startOf("day").toDate();
+    contract.end_date = moment(end_date).startOf("day").toDate();
 
     await ContractService.deleteMany({contract_id: contract._id});
     for (const item of services) {
@@ -58,6 +58,9 @@ export async function update({start_date, end_date, services}, contract) {
 
 export async function remove(contract) {
     contract.deleted = true;
+    const room = await BoardingRoom.findOne({_id: contract.room_id});
+    room.status = ROOM_STATUS.NOT_RENTED;
+    await room.save();
     await contract.save();
     return await ContractService.deleteMany({contract_id: contract._id});
 }
@@ -102,7 +105,7 @@ export async function getList({q}, house) {
                                 {
                                     $and: [
                                         {$gte: [todayStart, "$start_date"]},
-                                        {$lt: [todayStart, "$end_date"]},
+                                        {$lte: [todayStart, "$end_date"]},
                                     ],
                                 },
                                 CONTRACT_STATUS.ACTIVE,

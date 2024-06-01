@@ -71,6 +71,7 @@ export const updateUser = Joi.object({
         buffer: Joi.binary().label("Ảnh đại diện"),
     })
         .instance(FileUpload)
+        .allow("")
         .label("Ảnh đại diện"),
     email: Joi.string()
         .trim()

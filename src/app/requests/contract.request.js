@@ -94,8 +94,8 @@ export const create = Joi.object({
         .label("Ngày hết hạn")
         .custom((value, helpers) => {
             const start_date = moment(helpers.state.ancestors[0].start_date).startOf("day");
-            if (moment(value).startOf("day") < start_date) {
-                return helpers.message("Ngày hết hạn không thể nhỏ hơn ngày bắt đầu");
+            if (moment(value).startOf("day") <= start_date) {
+                return helpers.message("Ngày hết hạn không thể nhỏ hơn hoặc bằng ngày bắt đầu");
             }
             return value;
         }),
